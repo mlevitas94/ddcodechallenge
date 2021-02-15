@@ -6,7 +6,16 @@ export const createLanguagesList = (languages) => {
         <Accordion>
             {<AccordionItem className="accordion" title={"Languages ↓"} expanded="true">
                 <div>
-                    {languages.map(item => { return (<li className="LanguageProficienciesList">{item}</li>)})}
+
+                    {languages.map((item, i) => {
+                        //adjusted JSX to access item name
+                        return (
+                            <li key={i} className="LanguageProficienciesList">
+                                {item.name}
+                            </li>
+                        )
+
+                    })}
                 </div>
             </AccordionItem>}
         </Accordion>);

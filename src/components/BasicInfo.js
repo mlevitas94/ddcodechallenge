@@ -13,24 +13,44 @@ const basicInfoSchema = Yup.object().shape({
     chosenRace: Yup.string().required('Race is required'),
   });
 
-const BasicInfo = ()  => {
+const BasicInfo = (props)  => {
+    //removed state for races and classes array. Dropdowns are using state from Wizard.js
     const [getName, setName] = useState("");
-    const [classOptions] = useState([]);
-    const [raceOptions] = useState([]);
-    const [getClass] = useState("");
-    const [getRace] = useState("");
-    const [proficiencies] = useState([]);
-    const [languages] = useState([]);
+    const [getClass, setClass] = useState("");
+    const [getRace, setRace] = useState("");
+    const [proficiencies, setProficiencies] = useState([]);
+    const [languages, setLanguages] = useState([]);
 
-    const handleSubmit = (e) => {
-        const chosenClass = e.chosenClass.name;
-        const chosenRace = e.chosenRace.name;
+
+
+    const handleSubmit = async (e) => {
+        const chosenClass = e.chosenClass;
+        const chosenRace = e.chosenRace;
+
+
+        let allData = {}
+        const urls = [
+            { class: `http://www.dnd5eapi.co${chosenClass.url}` },
+            { race: `http://www.dnd5eapi.co${chosenRace.url}` }
+        ]
+    
+        await Promise.all(urls.map(async url => {
+            const key = Object.keys(url)[0]
+            await fetch(url[key]).then(async results => {
+                await results.json().then(results => {
+                    allData[key] = results
+                })
+            })
+        }))
+        setLanguages(allData.race.languages)
+        setProficiencies(allData.class.proficiencies)
+        setRace(chosenRace.name)
+        setClass(chosenClass.name)
     }
 
     const setCharacterName = e => {
         setName(e);
     };
-
     return(
         <>
             <h2>Choose name, race & class</h2>
@@ -59,8 +79,11 @@ const BasicInfo = ()  => {
                                 className="dropdownFormElement"
                                 style={{ marginTop: '1rem' }}
                                 optionLabel="name"
-                                options={raceOptions}
-                                placeholder="Select D&D Race"/>}/>
+                                //dropdown options using state from Wizard.js
+                                options={props.charOptions.races}
+                                placeholder="Select D&D Race"
+                                />}/>
+                                
                             <ErrorMessage name='chosenRace'/>
 
                             <Field name="chosenClass" render={({field}) =>
@@ -69,8 +92,11 @@ const BasicInfo = ()  => {
                                 className="dropdownFormElement"
                                 style={{ marginTop: '1rem' }}
                                 optionLabel="name"
-                                options={classOptions}
-                                placeholder="Select D&D Class"/>}/>
+                                //dropdown options using state from Wizard.js
+                                options={props.charOptions.classes}
+                                placeholder="Select D&D Class"
+                                
+                                />}/>
                             <ErrorMessage name='chosenClass'/>
                             <Button label="Select" className="dropdownFormElement dropdownFormButton p-button-raised" style={{ marginTop: '1rem' }}/>
                         </div>

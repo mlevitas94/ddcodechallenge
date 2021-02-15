@@ -7,7 +7,14 @@ export const createProficienciesList = (proficiencies) => {
         <Accordion>
             {<AccordionItem className="accordion" title={"Proficiencies ↓"} expanded="true">
                 <div>
-                    {proficiencies.map(item => { return (<li className="LanguageProficienciesList">{item}</li>)})}
+                    {proficiencies.map((item, i) => {
+                        //adjusted JSX to access item name
+                        return (
+                            <li key={i} className="LanguageProficienciesList">
+                                {item.name}
+                            </li>
+                        )
+                    })}
                 </div>
             </AccordionItem>}
         </Accordion>);

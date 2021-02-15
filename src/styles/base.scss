@@ -34,7 +34,8 @@ body {
 }
 
 .app-container {
-    width: 80%;
+    // width adjustment for small and large screen sizes
+    width: 90%;
     margin: 0 auto;
     border-radius: 0.5rem;
     border: 1px solid var(--black);
@@ -43,9 +44,25 @@ body {
     margin-bottom: 5rem;
     padding: 1rem;
     background-color: var(--black);
+    // width adjustment for small and large screen sizes
+    max-width: 600px;
 }
 
+
+//nested selectors to fix styles of input boxes and flow of the select button
 .wizard {
     width: 100%;
+    .dropdownFormContainer{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      button{
+        flex-grow: 1;
+      }
+      .p-dropdown{
+        flex-grow: 1;
+        min-width: 50%;
+      }
+    }
 }
 
